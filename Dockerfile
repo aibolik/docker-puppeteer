@@ -15,28 +15,10 @@ RUN yarn global add puppeteer@1.20.0 && yarn cache clean
 
 ENV NODE_PATH="/usr/local/share/.config/yarn/global/node_modules:${NODE_PATH}"
 
-ENV PATH="/tools:${PATH}"
-
-RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser
-
-COPY --chown=pptruser:pptruser ./tools /tools
-
 # Set language to UTF8
 ENV LANG="C.UTF-8"
 
 WORKDIR /app
-
-# Add user so we don't need --no-sandbox.
-RUN mkdir /screenshots \
-	&& mkdir -p /home/pptruser/Downloads \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /usr/local/share/.config/yarn/global/node_modules \
-    && chown -R pptruser:pptruser /screenshots \
-    && chown -R pptruser:pptruser /app \
-    && chown -R pptruser:pptruser /tools
-
-# Run everything after as non-privileged user.
-USER pptruser
 
 # --cap-add=SYS_ADMIN
 # https://docs.docker.com/engine/reference/run/#additional-groups
